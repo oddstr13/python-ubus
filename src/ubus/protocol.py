@@ -119,7 +119,11 @@ class Ubus:
     EMPTY_SESSION = "00000000000000000000000000000000"
 
     def __init__(self, host, username=None, password=None):
-        self.endpoint = 'http://%s/ubus' % host
+        if not '/' in host:
+            _LOGGER.warning("Initializing Ubus with `%s` is deprecated, use `http://%s/ubus` in stead." % (host, host))
+            self.endpoint = 'http://%s/ubus' % host
+        else:
+            self.endpoint = host
         self.username = username
         self.password = password
         self.timeout = 5
