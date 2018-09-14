@@ -59,6 +59,7 @@ setup(
     ],
     install_requires=[
         'click',
+        'requests',
     ],
     extras_require={
     },
