@@ -118,7 +118,7 @@ class UbusNamespace:
 class Ubus:
     EMPTY_SESSION = "00000000000000000000000000000000"
 
-    def __init__(self, host, username=None, password=None):
+    def __init__(self, host, username=None, password=None, verify=True):
         if not '/' in host:
             _LOGGER.warning("Initializing Ubus with `%s` is deprecated, use `http://%s/ubus` in stead." % (host, host))
             self.endpoint = 'http://%s/ubus' % host
@@ -127,6 +127,7 @@ class Ubus:
         self.username = username
         self.password = password
         self.timeout = 5
+        self.verify = verify
         self._ifaces = None
         self._message_id = 0
         self._session_id = Ubus.EMPTY_SESSION
@@ -188,7 +189,7 @@ class Ubus:
         _LOGGER.debug(">> %s" % pf(data))
 
         try:
-            res = requests.post(self.endpoint, data=data, timeout=self.timeout)
+            res = requests.post(self.endpoint, data=data, timeout=self.timeout, verify=self.verify)
         except requests.exceptions.Timeout as ex:
             raise UbusException("Got timeout") from ex
         except requests.exceptions.ConnectionError as ex:
